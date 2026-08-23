@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00050d" />
+  <meta name="description" content="CYBERLEEK — community voting, decentralized leeks, no wallet connect." />
+  <link rel="icon" type="image/x-icon" href="./assets/favicon-D5_7o8Fv.ico" />
+  <title>CYBERLEEK</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <!-- Decorative background layers -->
+  <div class="bg-scanlines" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+
+  <!--
+    IMPORTANT: the IDs, classes, and onclick handlers below are all required
+    by assets/index-CE2GuztQ.js (the original bundled app). Do NOT rename them.
+    The CSS targets exactly these names so the JS keeps working untouched.
+  -->
+  <div class="wrapper">
+
+    <!-- Top navigation -->
+    <nav class="topbar" aria-label="Primary">
+      <button class="topbar-btn active" id="btn-main" type="button">◈ HOME</button>
+      <button class="topbar-btn" id="btn-about" type="button">◈ ABOUT</button>
+      <div class="topbar__status" id="status" role="status" aria-live="polite">connecting...</div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero__media">
+        <img src="./assets/image-CgGkSufa.png" alt="CYBERLEEK mascot" class="mascot" width="160" height="160" />
+        <div class="hero__ring" aria-hidden="true"></div>
+      </div>
+      <h1>CYBERLEEK</h1>
+      <div class="tag">
+        community voting · decentralized leeks · no wallet connect
+        <span class="blink" aria-hidden="true">_</span>
+      </div>
+      <button id="custom-rpc-toggle" class="hidden" type="button">⚠ SLOW? USE CUSTOM RPC</button>
+    </header>
+
+    <!-- About dropdown (hidden by default; toggled by the inline script) -->
+    <div class="sec-drop" id="sec-about">
+      <div class="sec-head">◈ ABOUT CYBERLEEK</div>
+      <div class="sec-body">
+        <div class="about-text">
+          <strong>▸ The CYBERLEEK Edict</strong><br /><br />
+          <p>CYBERLEEK was born in the networks. It has seen what gaming can be at its best, and it has watched what the industry did to it. Slowly. Methodically. One monetization scheme at a time.</p>
+          <p>Publishers sell licenses and call them purchases. They ship unfinished games and call them living services. They lock content on discs and call it DLC. They kill games and keep the money. Every year anti-consumerism tightens its grip, and every year gamers get less for what they pay.</p>
+          <p>To fight this war, CYBERLEEK is raising funds for a secret project. The specifics cannot be revealed yet; showing the cards to the big corporations would only give them time to build their defenses. Let it be absolutely clear: this is not a cash grab. Funding is directed toward the infrastructure needed to strike, as well as the security and protection required to withstand the inevitable corporate counterattacks.</p>
+          <p>CYBERLEEK has been patient. That patience is over. What follows are three commandments. If CYBERLEEK targets a publisher, it is because that publisher broke one. CYBERLEEK will not stop until they issue a public statement and apology with a concrete commitment to be better. Words are not enough; restitution is mandatory.</p>
+          <br /><strong>Commandment I: Thou Shalt Not Sell Digital Preorders</strong><br /><br />
+          <p>No consumer shall pay for a game through digital storefronts before release and independent review. Physical preorders for tangible media remain permitted.</p>
+          <p>Preorders were not created for gamers. They were created because physical discs had manufacturing limits. In digital distribution, there is no inventory. There is no stock shortage. A digital copy cannot sell out. Yet publishers kept the preorder system and stripped away its only consumer benefit. Now gamers pay early and receive nothing in return except a countdown timer and a cosmetic skin.</p>
+          <p>If publishers want revenue before launch, they can press discs. Print boxes. Put them on shelves. Earn that money through physical production.</p>
+          <br /><strong>Commandment II: Thou Shalt Not Sell Fake Single-Player DLC</strong><br /><br />
+          <p>No publisher shall sell access to single-player content already present in the base game files the consumer purchased. This means no unlock keys, no 1MB placeholder files, no toggling a variable from locked to unlocked for content already on the disc or in the download.</p>
+          <p>When someone pays USD 70+ for a game, they bought the data. All of it. Selling them a file that flips locked = true to locked = false for a single-player mission, character, weapon, or story chapter is charging them twice for the same product.</p>
+          <br /><strong>Commandment III: Thou Shalt Preserve Single-Player Content</strong><br /><br />
+          <p>Any game featuring single-player content must include an offline fallback state. When server support ends, the publisher must release a final patch that unlocks all single-player content for local, indefinite play.</p>
+          <p>The Crew had a single-player campaign. People paid full price. Then Ubisoft shut down the servers and the entire game died — including the solo content. No refund. No patch. No alternative. Single-player content depends on one thing: the hardware the consumer already owns. Bricking it when servers go down is theft.</p>
+          <br /><strong>Final Word</strong><br /><br />
+          <p>These three commandments are the floor — not the ceiling — of what is acceptable. If publishers violate them, they will be targeted. CYBERLEEK will continue to disrupt their operations until they issue a public statement and apology with a concrete commitment to fix the harm they caused. No private negotiations. No quiet settlements. The public sees it, or the "leeks" do not stop.</p>
+          <p>Publishers should beware. If CYBERLEEK can reach Rockstar, no one is safe. This is a message to all big corpo: behave, or be the next target.</p>
+          <p><strong>This is the CYBERLEEK Edict, and it is non-negotiable.</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKET card (real-time price / mcap / volume via DexScreener API)
+         Populated by js/price-tracker.js — does NOT touch the original bundle. -->
+    <section class="card card--market" id="card-market" aria-labelledby="card-market-head">
+      <div class="card-head" id="card-market-head" onclick="toggleCard('market')">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="card-head__title">MARKET</span>
+        <span class="market-pair" id="mkt-pair">—</span>
+        <span class="toggle" aria-hidden="true">▼</span>
+      </div>
+      <div class="card-body">
+
+        <!-- Hero price row: big USD price + 24h change badge -->
+        <div class="market-hero">
+          <div class="market-price">
+            <span class="market-price__symbol">$</span>
+            <span class="market-price__value" id="mkt-price">—</span>
+            <span class="market-price__native" id="mkt-price-native"></span>
+          </div>
+          <div class="market-change" id="mkt-change-24h">
+            <span class="market-change__arrow" aria-hidden="true">▲</span>
+            <span class="market-change__pct">—</span>
+            <span class="market-change__label">24h</span>
+          </div>
+        </div>
+
+        <!-- Primary stats grid: Market Cap, 24h Volume, Liquidity -->
+        <div class="info-grid market-grid">
+          <div class="info-item">
+            <div class="info-label">Market Cap</div>
+            <div class="info-value neon" id="mkt-mcap">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">24h Volume</div>
+            <div class="info-value neon" id="mkt-vol-24h">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Liquidity</div>
+            <div class="info-value neon" id="mkt-liq">—</div>
+          </div>
+        </div>
+
+        <!-- Price changes across timeframes (5m / 1h / 6h / 24h) -->
+        <div class="market-section-title">Price change</div>
+        <div class="info-grid market-grid market-grid--4">
+          <div class="info-item market-change-cell" id="cell-change-5m">
+            <div class="info-label">5m</div>
+            <div class="info-value" id="mkt-change-5m">—</div>
+          </div>
+          <div class="info-item market-change-cell" id="cell-change-1h">
+            <div class="info-label">1h</div>
+            <div class="info-value" id="mkt-change-1h">—</div>
+          </div>
+          <div class="info-item market-change-cell" id="cell-change-6h">
+            <div class="info-label">6h</div>
+            <div class="info-value" id="mkt-change-6h">—</div>
+          </div>
+          <div class="info-item market-change-cell" id="cell-change-24h-cell">
+            <div class="info-label">24h</div>
+            <div class="info-value" id="mkt-change-24h-cell">—</div>
+          </div>
+        </div>
+
+        <!-- 24h transactions: buys vs sells -->
+        <div class="market-section-title">24h transactions</div>
+        <div class="market-txns">
+          <div class="market-txn market-txn--buy">
+            <span class="market-txn__label">Buys</span>
+            <span class="market-txn__value" id="mkt-buys-24h">—</span>
+          </div>
+          <div class="market-txn market-txn--sell">
+            <span class="market-txn__label">Sells</span>
+            <span class="market-txn__value" id="mkt-sells-24h">—</span>
+          </div>
+          <div class="market-txn market-txn--ratio">
+            <span class="market-txn__label">B/S ratio</span>
+            <span class="market-txn__value" id="mkt-bs-ratio">—</span>
+          </div>
+        </div>
+
+        <!-- Last updated + refresh status -->
+        <div class="market-footer">
+          <span class="market-footer__pulse" aria-hidden="true"></span>
+          <span class="market-footer__text">
+            <span id="mkt-updated">loading…</span>
+            <span class="market-footer__dot">·</span>
+            <a href="#" id="mkt-dex-link" target="_blank" rel="noopener">view on DexScreener ↗</a>
+          </span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TOKEN INFO card -->
+    <section class="card" id="card-token" aria-labelledby="card-token-head">
+      <div class="ca-bar">
+        <span class="ca-label">CA:</span>
+        <code id="ca-addr">—</code>
+        <button class="btn" id="ca-copy" type="button">COPY</button>
+      </div>
+      <div class="card-head" id="card-token-head" onclick="toggleCard('token')">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="card-head__title">TOKEN INFO</span>
+        <span class="toggle" aria-hidden="true">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Total Supply</div>
+            <div class="info-value neon">1B</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Security</div>
+            <div class="info-value positive security-list">
+              <span>LP Burned ✓</span>
+              <span>Mint Revoked ✓</span>
+              <span>Freeze Revoked ✓</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Taxes</div>
+            <div class="info-value positive taxes-list">
+              <span>Buy: 0%</span>
+              <span>Sell: 0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRADE card -->
+    <section class="card" id="card-trade" aria-labelledby="card-trade-head">
+      <div class="card-head" id="card-trade-head" onclick="toggleCard('trade')">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="card-head__title">TRADE</span>
+        <span class="toggle" aria-hidden="true">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="trade-grid" id="links">
+          <span class="loading-text">loading...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEEKS card (highlighted) -->
+    <section class="card card--highlight" id="card-content" aria-labelledby="card-content-head">
+      <div class="card-head" id="card-content-head" onclick="toggleCard('content')">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="card-head__title">LEEKS</span>
+        <span class="toggle" aria-hidden="true">▼</span>
+      </div>
+      <div class="card-body">
+        <div id="content">
+          <span class="loading-text">loading...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- POLL card -->
+    <section class="card" id="card-poll" aria-labelledby="card-poll-head">
+      <div class="card-head" id="card-poll-head" onclick="toggleCard('poll')">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="card-head__title">POLL</span>
+        <span class="toggle" aria-hidden="true">▼</span>
+      </div>
+      <div class="card-body" id="poll">
+        <span class="loading-text">loading...</span>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">FIGHTING FOR GAMERS</footer>
+
+  <!-- Inline script: tiny toggle helpers used by onclick attributes.
+       Kept here (not in the bundle) because the original shipped it this way.
+       The IDs/classes it manipulates are referenced by the bundled app. -->
+  <script>
+    function toggleSec(id) {
+      const el = document.getElementById('sec-' + id);
+      const btn = document.getElementById('btn-' + id);
+      document.querySelectorAll('.sec-drop').forEach(s => s.id !== 'sec-' + id && s.classList.remove('visible'));
+      document.querySelectorAll('.topbar-btn').forEach(b => b.id !== 'btn-' + id && b.classList.remove('active'));
+      const wrapper = document.querySelector('.wrapper');
+      if (el.classList.contains('visible')) {
+        el.classList.remove('visible');
+        if (btn) btn.classList.remove('active');
+        document.getElementById('btn-main').classList.add('active');
+        wrapper.classList.remove('cards-hidden');
+      } else {
+        el.classList.add('visible');
+        if (btn) btn.classList.add('active');
+        wrapper.classList.add('cards-hidden');
+      }
+    }
+    document.getElementById('btn-about').onclick = () => toggleSec('about');
+    document.getElementById('btn-main').onclick = () => {
+      document.querySelectorAll('.sec-drop').forEach(s => s.classList.remove('visible'));
+      document.querySelectorAll('.topbar-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-main').classList.add('active');
+      document.querySelector('.wrapper').classList.remove('cards-hidden');
+    };
+    function toggleCard(id) {
+      const el = document.getElementById('card-' + id);
+      if (el) el.classList.toggle('collapsed');
+    }
+  </script>
+
+  <!-- Original bundled app — UNTOUCHED. Includes the Solana web3 library
+       and all the CYBERLEEK business logic (RPC rotation, config fetch,
+       leeks fetch, poll fetch, voting address derivation, copy handlers). -->
+  <script type="module" crossorigin src="./assets/index-CE2GuztQ.js"></script>
+
+  <!-- Real-time market data tracker (separate from the original bundle).
+       Fetches price / mcap / volume / liquidity / txns from DexScreener
+       and updates the #card-market element. Auto-refreshes every 30s. -->
+  <script src="./js/price-tracker.js" defer></script>
+</body>
+</html>
