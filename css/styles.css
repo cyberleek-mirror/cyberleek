@@ -1026,3 +1026,294 @@ code { font-family: inherit; }
   .market-txns { grid-template-columns: 1fr; }
 }
 
+/* =========================================================================
+   18. New sections from official update v0.2.0:
+   FAQ dropdown, CONTACT dropdown with Monero flow, ANNOUNCEMENTS card.
+   (These target the IDs/classes that the new bundle index-B5VI5ckO.js
+   expects — same naming convention as the original sections.)
+   ========================================================================= */
+
+/* ---- FAQ question/answer pairs (dynamically injected into #faq-content) ---- */
+.faq-q {
+  font-weight: 700;
+  color: var(--green);
+  margin-top: var(--s-5);
+  margin-bottom: var(--s-2);
+  font-size: 0.95em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--border);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.faq-q:first-child,
+.sec-intro-title {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+  text-transform: none;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+.faq-a {
+  color: var(--text-dim);
+  font-size: 0.92em;
+  line-height: 1.85;
+  margin-bottom: var(--s-4);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.faq-a p { margin-bottom: var(--s-2); }
+.faq-a strong { color: var(--text-bright); }
+
+/* Intro block at the top of the Contact section */
+.sec-intro-body p { color: var(--text-dim); margin-bottom: var(--s-3); }
+
+/* ---- Buttons ---- */
+.btn--block {
+  width: 100%;
+  margin-top: var(--s-3);
+  padding: 12px 20px;
+}
+
+/* ---- Spinner (shown while generating Monero/Session account) ---- */
+.monero-loading {
+  text-align: center;
+  padding: 2rem var(--s-3);
+  color: var(--text-dim);
+  font-size: 0.9em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+}
+.monero-loading[hidden] { display: none !important; }
+
+.spinner {
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--green);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Monero content block (shown after generation) ---- */
+.monero-content { margin-top: var(--s-4); }
+.monero-content[hidden] { display: none !important; }
+
+/* Reusable info-box variants */
+.info-box__label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--s-2);
+  font-weight: 700;
+}
+.info-box--warning {
+  border-color: var(--amber-dim) !important;
+  background: rgba(255, 204, 0, 0.05) !important;
+  color: var(--amber) !important;
+}
+.info-box--rules {
+  font-size: 0.85em;
+  color: var(--text-dark);
+  margin-top: var(--s-4);
+}
+.info-box--rules ul {
+  list-style: none;
+  padding: 0;
+  margin: var(--s-2) 0 0;
+}
+.info-box--rules li {
+  position: relative;
+  padding-left: var(--s-4);
+  margin-bottom: 4px;
+}
+.info-box--rules li::before {
+  content: "▸";
+  color: var(--green);
+  position: absolute;
+  left: 0;
+}
+
+/* ---- Mnemonic display box ---- */
+.mnemonic-box {
+  border: 1px solid var(--amber-dim);
+  padding: var(--s-3);
+  background: var(--bg);
+  margin: var(--s-3) 0;
+  font-family: var(--font-mono);
+  color: var(--amber);
+  user-select: all;
+  word-break: break-all;
+  border-radius: var(--r-sm);
+  font-size: 0.92em;
+  line-height: 1.7;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.25);
+}
+
+/* ---- Session login helper ---- */
+.session-login-help {
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px dashed var(--border-soft);
+}
+.session-login-help h3 {
+  margin: 0 0 var(--s-2) 0;
+  font-size: 1rem;
+  color: var(--text-bright);
+  font-weight: 700;
+}
+.session-login-help p { font-size: 0.9em; color: var(--text-dim); }
+.session-login-help a,
+.monero-help a,
+.faq-a a,
+.info-box a {
+  color: var(--neon);
+  text-decoration: none;
+  transition: text-shadow var(--dur) var(--ease);
+}
+.session-login-help a:hover,
+.monero-help a:hover,
+.faq-a a:hover,
+.info-box a:hover {
+  text-shadow: 0 0 8px var(--neon-glow);
+}
+
+/* ---- Monero amount + address fields ---- */
+.xmr-field { margin: var(--s-3) 0; }
+.xmr-amount {
+  border: 1px solid var(--green);
+  padding: var(--s-3);
+  text-align: center;
+  background: var(--bg);
+  color: var(--green);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  border-radius: var(--r-sm);
+  font-size: 1.05em;
+  text-shadow: 0 0 6px var(--green-glow);
+  word-break: break-all;
+}
+.xmr-address {
+  border: 1px solid var(--border);
+  padding: var(--s-3);
+  background: var(--bg);
+  color: var(--neon);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  word-break: break-all;
+  user-select: all;
+  border-radius: var(--r-sm);
+}
+
+/* ---- Critical warning under Monero amount ---- */
+.xmr-warning {
+  color: var(--red) !important;
+  font-weight: 600;
+  font-size: 0.88em;
+  line-height: 1.7;
+  margin-top: var(--s-3);
+  padding: var(--s-3);
+  border: 1px solid rgba(255, 51, 85, 0.4);
+  border-radius: var(--r-sm);
+  background: rgba(255, 51, 85, 0.04);
+}
+.xmr-warning strong { color: var(--red); }
+
+/* ---- "Need Monero?" expandable help ---- */
+.monero-help {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  padding: var(--s-4);
+  margin-top: var(--s-4);
+  border-radius: var(--r-sm);
+}
+.monero-help summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--neon);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.monero-help summary::before {
+  content: "▸";
+  color: var(--neon);
+}
+.monero-help summary::-webkit-details-marker { display: none; }
+.monero-help[open] summary::before { content: "▾"; }
+.monero-help__body {
+  margin-top: var(--s-4);
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.85;
+}
+.monero-help__body p { margin-bottom: var(--s-3); }
+.monero-help__body strong { color: var(--text-bright); }
+
+/* ---- ANNOUNCEMENTS card (dynamically populated) ---- */
+#card-anns .ann-item {
+  border: 1px solid var(--border);
+  background: var(--bg-elev-1);
+  padding: var(--s-3) var(--s-4);
+  margin-bottom: var(--s-2);
+  border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease);
+}
+#card-anns .ann-item:hover { border-color: var(--neon-dim); }
+#card-anns .ann-item .ann-title {
+  font-weight: 700;
+  color: var(--neon);
+  margin-bottom: var(--s-2);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+#card-anns .ann-item .ann-body {
+  color: var(--text-dim);
+  font-size: 0.92em;
+  line-height: 1.85;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+#card-anns .ann-item .ann-meta {
+  color: var(--text-dark);
+  font-size: 0.78em;
+  margin-top: var(--s-2);
+  letter-spacing: 1px;
+}
+/* "Show N older..." toggle injected by the bundle */
+#card-anns .arr {
+  color: var(--green);
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.82em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+#card-anns .ann-item.collapsed { display: none; }
+
+/* ---- Make sure the topbar's hidden class works correctly ----
+   The bundle toggles `.hidden` on topbar buttons (#btn-contact, #btn-faq).
+   Our global `.hidden { display: none !important; }` rule already covers this
+   — no extra rules needed here. */
+
+/* ---- Mobile tweaks for new sections ---- */
+@media (max-width: 540px) {
+  .sec-body { padding: var(--s-4) var(--s-3); }
+  .monero-help { padding: var(--s-3); }
+  .xmr-amount,
+  .xmr-address,
+  .mnemonic-box { font-size: 0.82em; }
+}
+
+

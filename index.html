@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#00050d" />
   <meta name="description" content="CYBERLEEK — community voting, decentralized leeks, no wallet connect." />
-  <meta name="google-site-verification" content="HmoxQNYmw9B4CJkQ10RmG2khK4ioc6ynkgYw3w5VlMc" />
   <link rel="icon" type="image/x-icon" href="./assets/favicon-D5_7o8Fv.ico" />
   <title>CYBERLEEK</title>
   <link rel="stylesheet" href="./css/styles.css" />
@@ -18,15 +17,21 @@
 
   <!--
     IMPORTANT: the IDs, classes, and onclick handlers below are all required
-    by assets/index-CE2GuztQ.js (the original bundled app). Do NOT rename them.
+    by assets/index-B5VI5ckO.js (the original bundled app). Do NOT rename them.
     The CSS targets exactly these names so the JS keeps working untouched.
+    The Contact / FAQ / Announcements features are toggled by the bundle
+    itself based on the on-chain site config (visibility of the section).
   -->
   <div class="wrapper">
 
-    <!-- Top navigation -->
+    <!-- Top navigation
+         CONTACT and FAQ buttons are hidden by default; the bundle unhides
+         them when the on-chain site config says those sections are visible. -->
     <nav class="topbar" aria-label="Primary">
       <button class="topbar-btn active" id="btn-main" type="button">◈ HOME</button>
       <button class="topbar-btn" id="btn-about" type="button">◈ ABOUT</button>
+      <button class="topbar-btn hidden" id="btn-contact" type="button">◈ CONTACT</button>
+      <button class="topbar-btn hidden" id="btn-faq" type="button">◈ FAQ</button>
       <div class="topbar__status" id="status" role="status" aria-live="polite">connecting...</div>
     </nav>
 
@@ -70,6 +75,85 @@
           <p><strong>This is the CYBERLEEK Edict, and it is non-negotiable.</strong></p>
         </div>
       </div>
+    </div>
+
+    <!-- CONTACT dropdown (hidden by default; toggled by inline script.
+         The Monero wallet generation flow is powered by the bundle. -->
+    <div class="sec-drop" id="sec-contact">
+      <div class="sec-head">◈ CONTACT</div>
+      <div class="sec-body" id="contact-content">
+        <div class="faq-q sec-intro-title">Secure Contact &amp; Advertising</div>
+        <div class="faq-a sec-intro-body">
+          <p>CYBERLEEK is raising funds through community support and strategic partnerships. This isn't a ransom where publishers pay to stop the leeks—instead, CYBERLEEK offers premium advertising space and exclusive content opportunities.</p>
+          <p>Sending a Monero payment enables secure contact via Session messenger for deal negotiations. Options include purchasing ad placements (such as video watermarks) or requesting custom-made gameplay footage tailored to specific brands (including adult content). All pricing, terms, and deliverables are discussed privately over Session.</p>
+          <p>The Monero transfer serves as a contact fee that guarantees CYBERLEEK will respond to initiate the conversation.</p>
+          <button class="btn btn--block" id="btn-monero-contact" type="button">Generate Contact Details</button>
+        </div>
+
+        <div class="monero-loading" id="monero-loading" style="display: none;">
+          <div class="spinner" aria-hidden="true"></div>
+          <div>Generating your unique Session account... (Takes ~15 seconds)</div>
+        </div>
+
+        <div class="monero-content" id="monero-content" style="display: none;">
+          <div class="info-box info-box--warning">
+            <div class="info-box__label">1. Save Your Recovery Password</div>
+            <p>This is your Session account. If you lose these words, you lose the account and it's impossible for CYBERLEEK to contact you. Write them down.</p>
+            <div class="mnemonic-box" id="mnemonic">Loading...</div>
+            <div class="session-login-help">
+              <h3>Log into Session</h3>
+              <p>Download <a href="https://getsession.org/download" target="_blank" rel="noopener">Session</a>. Open it, tap "I have an account", and paste the words above.</p>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <div class="info-box__label">2. Send Donation</div>
+            <p>The numbers after the decimal point are your unique ID. Don't round them. The number before the decimal is the donation fee.</p>
+            <div class="xmr-field">
+              <div class="info-label">Amount (XMR)</div>
+              <div class="xmr-amount" id="xmr-amount"></div>
+            </div>
+            <div class="xmr-field">
+              <div class="info-label">Address</div>
+              <div class="xmr-address" id="xmr-address"></div>
+            </div>
+            <p class="xmr-warning"><strong>⚠ CRITICAL:</strong> DO NOT send directly from a cryptocurrency exchange (KuCoin, Kraken, etc.). Exchanges change the exact decimal amounts of your withdrawal. If the 12 digits after the decimal point are altered, CYBERLEEK literally cannot derive your Session ID. You will not be contacted. You MUST send from a personal wallet.</p>
+          </div>
+
+          <div class="info-box">
+            <div class="info-box__label">3. Wait</div>
+            <p>Once you've sent the XMR from your personal wallet, wait up to 24 hours. CYBERLEEK will detect the payment, derive your Session ID, and message you. When CYBERLEEK messages you on Session, it is 100% authentic. No one else knows your Session ID. Do not share it with anyone.</p>
+          </div>
+
+          <details class="monero-help">
+            <summary>Need Monero? How to buy and send.</summary>
+            <div class="monero-help__body">
+              <p><strong>1. Buy XMR</strong><br />Get it on KuCoin, MEXC, HTX, Kraken, Poloniex, or Nonkyc.io.</p>
+              <p><strong>2. Get a Wallet</strong><br />Download <a href="https://cakewallet.com/" target="_blank" rel="noopener">Cake Wallet</a> (Mobile) or <a href="https://featherwallet.org/" target="_blank" rel="noopener">Feather Wallet</a> (Desktop).</p>
+              <p><strong>3. Withdraw</strong><br />Send the XMR from the exchange to your new wallet. Wait for it to arrive.</p>
+              <p><strong>4. Send Payment</strong><br />Send the exact amount shown above to the address shown above. Make sure your wallet sends 12 decimal places.</p>
+            </div>
+          </details>
+
+          <div class="info-box info-box--rules">
+            <p><strong>Rules:</strong></p>
+            <ul>
+              <li>You can advertise almost anything. Gambling and adult content are fine. No scams.</li>
+              <li>This payment only guarantees CYBERLEEK contacts you. Deal terms are worked out in chat.</li>
+            </ul>
+            <br />
+            <p><strong>How does this actually work?</strong></p>
+            <p>When you click the button above, this page does some heavy math to generate a brand new, unique 12-digit ID. That ID is mathematically tied to a brand new Session account.</p>
+            <p>Because Monero hides transaction amounts on the blockchain, no one else in the world can see the 12 digits you sent. Only CYBERLEEK can decrypt the amount, reverse the math to find your Session ID, and message you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ dropdown (hidden by default; body populated from on-chain site config) -->
+    <div class="sec-drop" id="sec-faq">
+      <div class="sec-head">◈ FAQ</div>
+      <div class="sec-body" id="faq-content"></div>
     </div>
 
     <!-- MARKET card (real-time price / mcap / volume via DexScreener API)
@@ -241,9 +325,23 @@
       </div>
     </section>
 
+    <!-- ANNOUNCEMENTS card
+         Hidden + collapsed by default; the bundle unhides it when there are
+         on-chain announcement accounts. Body populated dynamically. -->
+    <section class="card collapsed hidden" id="card-anns" aria-labelledby="card-anns-head">
+      <div class="card-head" id="card-anns-head" onclick="toggleCard('anns')">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="card-head__title">ANNOUNCEMENTS</span>
+        <span class="toggle" aria-hidden="true">▼</span>
+      </div>
+      <div class="card-body" id="anns">
+        <span class="loading-text">loading...</span>
+      </div>
+    </section>
+
   </div>
 
-  <footer class="footer">FIGHTING FOR GAMERS</footer>
+  <footer class="footer">PUBLISHERS' FAVORITE VEGETABLE</footer>
 
   <!-- Inline script: tiny toggle helpers used by onclick attributes.
        Kept here (not in the bundle) because the original shipped it this way.
@@ -267,6 +365,8 @@
       }
     }
     document.getElementById('btn-about').onclick = () => toggleSec('about');
+    document.getElementById('btn-contact').onclick = () => toggleSec('contact');
+    document.getElementById('btn-faq').onclick = () => toggleSec('faq');
     document.getElementById('btn-main').onclick = () => {
       document.querySelectorAll('.sec-drop').forEach(s => s.classList.remove('visible'));
       document.querySelectorAll('.topbar-btn').forEach(b => b.classList.remove('active'));
@@ -279,10 +379,12 @@
     }
   </script>
 
-  <!-- Original bundled app — UNTOUCHED. Includes the Solana web3 library
-       and all the CYBERLEEK business logic (RPC rotation, config fetch,
-       leeks fetch, poll fetch, voting address derivation, copy handlers). -->
-  <script type="module" crossorigin src="./assets/index-CE2GuztQ.js"></script>
+  <!-- Original bundled app — UNTOUCHED (only mojibake-repaired so special
+       chars in dynamically-injected HTML render correctly). Includes the
+       Solana web3 library + all CYBERLEEK business logic: RPC rotation,
+       site config fetch, leeks fetch, poll fetch, announcements fetch,
+       Monero/Session contact flow, voting address derivation, copy handlers. -->
+  <script type="module" crossorigin src="./assets/index-B5VI5ckO.js"></script>
 
   <!-- Real-time market data tracker (separate from the original bundle).
        Fetches price / mcap / volume / liquidity / txns from DexScreener

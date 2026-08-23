@@ -1,0 +1,24 @@
+{
+  "manifest": "arweave/paths",
+  "version": "0.2.0",
+  "index": {
+    "path": "index.html"
+  },
+  "paths": {
+    "assets/favicon-D5_7o8Fv.ico": {
+      "id": "XsS4z0mUHLy58nyeSy-i-JYjUfH87ZKvVweLCwd46sk"
+    },
+    "assets/image-CgGkSufa.png": {
+      "id": "4KFiolKlNvah8MgTSdhfzM2nItdCC3OdI9IZyLP5CHM"
+    },
+    "assets/index-B5VI5ckO.js": {
+      "id": "qSTAF93e3lotAGvRoYg2KZnAQilxFQp1swwzr0N9xck"
+    },
+    "index.html": {
+      "id": "4r5DQQD_HDYan0M2KtFyUd0DUToo78NM9riY3DQRXgE"
+    }
+  },
+  "fallback": {
+    "id": "4r5DQQD_HDYan0M2KtFyUd0DUToo78NM9riY3DQRXgE"
+  }
+}
