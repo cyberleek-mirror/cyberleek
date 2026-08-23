@@ -1,0 +1,1028 @@
+/* =========================================================================
+   CYBERLEEK — styles.css  (UI/UX redesign, original JS untouched)
+   -------------------------------------------------------------------------
+   This file targets the SAME IDs and class names that
+   assets/index-CE2GuztQ.js expects, so the bundled app keeps working
+   unchanged. We only add visual styling on top.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   1. Design tokens
+   ------------------------------------------------------------------------- */
+:root {
+  /* Colours */
+  --bg:           #00050d;
+  --bg-elev-1:    #00102b;
+  --bg-elev-2:    #001664;
+  --border:       #003299;
+  --border-soft:  rgba(0, 50, 153, 0.55);
+
+  --neon:         #0064ec;
+  --neon-dim:     #0050b8;
+  --neon-glow:    rgba(0, 100, 236, 0.25);
+  --neon-soft:    rgba(0, 100, 236, 0.08);
+
+  --green:        #60c33a;
+  --green-dim:    #4a9a2c;
+  --green-glow:   rgba(96, 195, 58, 0.25);
+
+  --red:          #ff3355;
+  --amber:        #fbbf24;
+  --amber-dim:    #b45309;
+
+  --text:         #a0b0c8;
+  --text-bright:  #d6efc1;
+  --text-dim:     #6a7a90;
+  --text-dark:    #3a4a60;
+
+  /* Typography */
+  --font-mono:    "JetBrains Mono", "Fira Code", "SFMono-Regular", "Cascadia Code", "Lucida Console", Monaco, Consolas, "Courier New", monospace;
+
+  /* Spacing scale */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px;
+
+  /* Radius */
+  --r-sm: 2px; --r-md: 4px; --r-lg: 6px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur:  200ms;
+
+  /* Layout */
+  --container-max: 880px;
+}
+
+/* -------------------------------------------------------------------------
+   2. Base / reset
+   ------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.65;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+code { font-family: inherit; }
+:focus-visible { outline: 2px solid var(--neon); outline-offset: 2px; }
+
+.hidden { display: none !important; }
+
+/* Decorative background layers */
+.bg-scanlines,
+.bg-grid,
+.bg-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.bg-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 4px,
+    rgba(0, 0, 0, 0.06) 4px 8px
+  );
+  z-index: 9999;
+}
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(0, 100, 236, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 100, 236, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: -1;
+}
+.bg-vignette {
+  background: radial-gradient(circle at 50% 0%, transparent 0%, rgba(0, 5, 13, 0.6) 70%, var(--bg) 100%);
+  z-index: -1;
+}
+
+/* -------------------------------------------------------------------------
+   3. Wrapper + topbar
+   ------------------------------------------------------------------------- */
+.wrapper {
+  max-width: var(--container-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--s-3) var(--s-4) var(--s-5);
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+  flex-wrap: wrap;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(0, 5, 13, 0.92);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+  margin-left: calc(-1 * var(--s-4));
+  margin-right: calc(-1 * var(--s-4));
+  padding-left: var(--s-4);
+  padding-right: var(--s-4);
+}
+.topbar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--r-sm);
+  transition: color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.topbar-btn:hover {
+  color: var(--text);
+  border-color: var(--border-soft);
+}
+.topbar-btn.active,
+.topbar-btn:hover.active {
+  border-color: var(--neon);
+  color: var(--neon);
+  box-shadow: 0 0 10px var(--neon-glow);
+}
+
+/* Status pill (extra element — original #status text remains readable) */
+.topbar__status {
+  margin-left: auto;
+  font-size: 0.72em;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------------
+   4. Hero
+   ------------------------------------------------------------------------- */
+.hero {
+  text-align: center;
+  padding: var(--s-5) var(--s-3) var(--s-5);
+  position: relative;
+  margin-bottom: var(--s-5);
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 12%; right: 12%; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon) 30%, var(--green) 70%, transparent);
+  box-shadow: 0 0 12px var(--neon-glow);
+}
+.hero__media {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--s-4);
+}
+.hero img.mascot {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 2px solid var(--neon);
+  box-shadow: 0 0 32px var(--neon-glow), inset 0 0 24px rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+.hero__ring {
+  position: absolute;
+  inset: -10px;
+  border: 1px dashed var(--green-dim);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: rotate 14s linear infinite;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--neon);
+  text-shadow: 0 0 30px var(--neon-glow), 0 0 60px rgba(0, 100, 236, 0.15);
+}
+.hero .tag {
+  margin-top: var(--s-2);
+  color: var(--text-dim);
+  font-size: 0.9em;
+  letter-spacing: 1.5px;
+}
+.hero .tag .blink {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--green);
+  animation: blink 1s infinite step-end;
+}
+@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+/* Original used #status as a plain text node — keep it readable inside hero */
+.hero #status {
+  color: var(--green);
+  font-size: 0.82em;
+  min-height: 18px;
+  margin-top: var(--s-2);
+  letter-spacing: 1px;
+}
+
+/* Custom-RPC toggle button (kept inline by the JS as #custom-rpc-toggle) */
+#custom-rpc-toggle {
+  font-size: 0.72em;
+  background: transparent;
+  border: 1px solid var(--text-dim);
+  color: var(--text-dim);
+  padding: 5px 12px;
+  cursor: pointer;
+  margin-top: var(--s-2);
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+#custom-rpc-toggle:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+}
+
+/* -------------------------------------------------------------------------
+   5. About dropdown (.sec-drop / .sec-head / .sec-body / .about-text)
+   JS toggles .visible on .sec-drop and .cards-hidden on .wrapper
+   ------------------------------------------------------------------------- */
+.sec-drop {
+  background: linear-gradient(180deg, var(--bg-elev-2), rgba(0, 16, 50, 0.92));
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  margin-bottom: var(--s-3);
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+.sec-drop.visible { display: block; }
+.sec-drop::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+}
+.sec-head {
+  padding: var(--s-3) var(--s-4);
+  font-size: 0.85em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--green);
+  border-bottom: 1px solid var(--border);
+}
+.sec-body { padding: var(--s-5) var(--s-4); }
+.about-text {
+  font-size: 0.95em;
+  color: var(--text-dim);
+  line-height: 1.95;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.about-text strong {
+  color: var(--text-bright);
+  font-weight: 700;
+}
+.about-text p { margin-bottom: var(--s-3); }
+.about-text strong { display: inline-block; }
+
+/* When About is open, JS adds .cards-hidden to .wrapper and hides the cards */
+.wrapper.cards-hidden .card,
+.wrapper.cards-hidden .hero { display: none !important; }
+
+/* -------------------------------------------------------------------------
+   6. Cards (.card / .card-head / .card-body / .dot / .toggle)
+   JS toggles .collapsed on individual .card elements via onclick=toggleCard()
+   ------------------------------------------------------------------------- */
+.card {
+  background: linear-gradient(180deg, var(--bg-elev-2), rgba(0, 16, 50, 0.92));
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  margin-bottom: var(--s-3);
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon), transparent);
+}
+.card-head {
+  padding: var(--s-3) var(--s-4);
+  font-size: 0.85em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--dur) var(--ease);
+}
+.card-head:hover { background: rgba(96, 195, 58, 0.04); }
+.card-head .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  flex-shrink: 0;
+}
+.card-head__title { flex: 1; }
+.card-head .toggle {
+  margin-left: auto;
+  transition: transform var(--dur) var(--ease);
+  font-size: 0.7em;
+  color: var(--text-dim);
+}
+.card.collapsed .card-head .toggle { transform: rotate(-90deg); }
+.card.collapsed .card-head { border-bottom-color: transparent; }
+.card-body { padding: var(--s-4); }
+.card.collapsed .card-body { display: none; }
+
+/* Highlighted LEEKS card (matches the original flash animation) */
+.card--highlight .card-head {
+  border: 1px solid var(--green);
+  border-radius: var(--r-md);
+  margin: -1px;
+  animation: flash 2.4s infinite var(--ease);
+}
+.card--highlight .card-head .dot { box-shadow: 0 0 12px var(--green); }
+@keyframes flash {
+  0%, 100% { box-shadow: 0 0 4px var(--green-glow); }
+  50%      { box-shadow: 0 0 18px var(--green-glow); }
+}
+
+/* -------------------------------------------------------------------------
+   7. Contract Address bar (.ca-bar / .ca-label / #ca-addr / #ca-copy)
+   ------------------------------------------------------------------------- */
+.card .ca-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--neon-soft);
+  flex-wrap: wrap;
+}
+.ca-label {
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+#ca-addr {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85em;
+  color: var(--neon);
+  text-shadow: 0 0 8px var(--neon-glow);
+  word-break: break-all;
+  font-family: inherit;
+}
+
+/* -------------------------------------------------------------------------
+   8. Buttons (.btn / .copy-btn)
+   ------------------------------------------------------------------------- */
+.btn,
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--neon);
+  color: var(--neon);
+  padding: 8px 20px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+  transition: background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              transform 120ms var(--ease);
+}
+.btn:hover,
+.copy-btn:hover {
+  background: var(--neon-soft);
+  box-shadow: 0 0 14px var(--neon-glow);
+}
+.btn:active,
+.copy-btn:active { transform: translateY(1px); }
+.btn.copied,
+.copy-btn.copied {
+  background: var(--green-glow);
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: 0 0 14px var(--green-glow);
+}
+
+/* -------------------------------------------------------------------------
+   9. Token info grid (.info-grid / .info-item / .info-label / .info-value)
+   ------------------------------------------------------------------------- */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+}
+.info-item {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  padding: var(--s-3);
+  border-radius: var(--r-sm);
+}
+.info-label {
+  font-size: 0.72em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--s-1);
+}
+.info-value {
+  font-size: 1.05em;
+  color: var(--text-bright);
+  font-weight: 700;
+  word-break: break-all;
+}
+.info-value.positive { color: var(--green); }
+.info-value.neon     { color: var(--neon); font-size: 1.4em; }
+.security-list,
+.taxes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82em;
+  line-height: 1.6;
+}
+
+/* -------------------------------------------------------------------------
+   10. Trade links (.trade-grid a, dynamically injected by JS into #links)
+   ------------------------------------------------------------------------- */
+.trade-grid {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.trade-grid a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--green);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid var(--green);
+  border-radius: var(--r-sm);
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+  animation: pulse-green 2.4s infinite var(--ease);
+}
+.trade-grid a::before { content: "▸"; color: var(--green); }
+.trade-grid a:hover {
+  background: rgba(96, 195, 58, 0.1);
+  box-shadow: 0 0 12px var(--green-glow);
+}
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 rgba(96, 195, 58, 0); }
+  50%      { box-shadow: 0 0 12px var(--green-glow); }
+}
+
+/* Loading placeholder text (used inside #links, #content, #poll) */
+.loading-text { color: var(--text-dim); }
+
+/* -------------------------------------------------------------------------
+   11. Content items / mirror links (dynamically injected by JS into #content)
+   ------------------------------------------------------------------------- */
+.content-item {
+  border: 1px solid var(--border);
+  padding: var(--s-3);
+  margin-bottom: var(--s-2);
+  background: var(--bg-elev-1);
+  border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease);
+}
+.content-item:hover { border-color: var(--neon-dim); }
+.content-title {
+  font-weight: 900;
+  font-size: 1.15em;
+  color: var(--neon);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--s-3);
+  text-shadow: 0 0 8px var(--neon-glow);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.mirror-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--neon);
+  text-decoration: none;
+  padding: 8px 14px;
+  border: 1px solid var(--neon);
+  border-radius: var(--r-sm);
+  font-size: 0.82em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: var(--neon-soft);
+  margin: 0 var(--s-2) var(--s-1) 0;
+  transition: background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.mirror-link:hover {
+  background: var(--neon-glow);
+  box-shadow: 0 0 14px var(--neon-glow);
+}
+.mirror-link.mirror-magnet {
+  color: var(--green);
+  border-color: var(--green);
+  background: rgba(96, 195, 58, 0.08);
+}
+.mirror-link.mirror-magnet:hover {
+  background: var(--green-glow);
+  box-shadow: 0 0 14px var(--green-glow);
+}
+
+/* -------------------------------------------------------------------------
+   12. Poll (dynamically injected by JS into #poll)
+   ------------------------------------------------------------------------- */
+.poll-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 12px;
+  font-size: 0.78em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--s-2);
+  border-radius: var(--r-sm);
+}
+.poll-badge.live {
+  color: var(--green);
+  border: 1px solid var(--green);
+  animation: pulse 2s infinite var(--ease);
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: none; }
+  50%      { box-shadow: 0 0 14px var(--green-glow); }
+}
+.poll-badge.ended {
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+.poll-title {
+  font-size: 1.35em;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: var(--s-1);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.poll-meta {
+  font-size: 0.8em;
+  color: var(--text-dim);
+  margin-bottom: var(--s-3);
+}
+.poll-meta .leading {
+  color: var(--green);
+  font-weight: 700;
+}
+.choice-row {
+  border: 1px solid var(--border);
+  padding: var(--s-3);
+  margin-bottom: var(--s-2);
+  background: var(--bg-elev-1);
+  border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.choice-row:hover { border-color: var(--neon-dim); }
+.choice-row.winning {
+  border-color: var(--green);
+  box-shadow: 0 0 10px var(--green-glow);
+}
+.choice-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--s-2);
+  gap: var(--s-3);
+}
+.choice-name {
+  font-weight: 700;
+  font-size: 1.05em;
+  color: var(--text-bright);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.choice-name.winner {
+  color: var(--green);
+  text-shadow: 0 0 8px var(--green-glow);
+}
+.pct {
+  color: var(--green);
+  font-weight: 700;
+}
+.bar-track {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  margin-bottom: var(--s-2);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--neon);
+  border-radius: inherit;
+  transition: width 0.5s var(--ease);
+}
+.bar-fill.winner {
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+}
+.choice-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.choice-addr {
+  font-size: 0.82em;
+  color: var(--text-dark);
+  word-break: break-all;
+  flex: 1;
+  min-width: 100px;
+}
+.choice-addr .addr { color: var(--neon); }
+
+/* -------------------------------------------------------------------------
+   13. Info box (dynamically injected by JS)
+   ------------------------------------------------------------------------- */
+.info-box {
+  border: 1px solid var(--neon);
+  border-radius: var(--r-sm);
+  background: var(--neon-soft);
+  padding: var(--s-4);
+  margin-top: var(--s-3);
+  font-size: 0.85em;
+  color: var(--text);
+  line-height: 1.9;
+}
+.info-box strong { color: var(--text-bright); }
+.info-box ul {
+  list-style: none;
+  padding: 0;
+  margin: var(--s-2) 0 0;
+}
+.info-box ul li {
+  margin-bottom: 4px;
+  padding-left: var(--s-4);
+  position: relative;
+}
+.info-box ul li::before {
+  content: "▸";
+  color: var(--green);
+  position: absolute;
+  left: 0;
+}
+
+/* -------------------------------------------------------------------------
+   14. RPC fallback UI (dynamically injected by JS as #rpc-fallback-ui)
+   ------------------------------------------------------------------------- */
+#rpc-fallback-ui {
+  border: 2px solid var(--red) !important;
+  padding: var(--s-6) !important;
+  margin-bottom: var(--s-5) !important;
+  background: var(--bg-elev-2) !important;
+  text-align: center !important;
+  border-radius: var(--r-md) !important;
+  box-shadow: 0 0 40px rgba(255, 51, 85, 0.3);
+}
+#rpc-fallback-ui h2 {
+  color: var(--red) !important;
+  margin-bottom: var(--s-3) !important;
+  font-size: 1.1em !important;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+#rpc-fallback-ui p {
+  color: var(--text-dim) !important;
+  margin-bottom: var(--s-4) !important;
+  font-size: 0.9em !important;
+  line-height: 1.7 !important;
+}
+#rpc-fallback-ui input[type="text"],
+#custom-rpc-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-bright);
+  font-family: inherit;
+  font-size: 0.9em;
+  border-radius: var(--r-sm);
+  margin-bottom: var(--s-3);
+  transition: border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+#rpc-fallback-ui input[type="text"]:focus,
+#custom-rpc-input:focus {
+  border-color: var(--neon);
+  box-shadow: 0 0 10px var(--neon-glow);
+  outline: none;
+}
+#rpc-fallback-ui button,
+#custom-rpc-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--neon);
+  color: var(--bg);
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  transition: background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+#rpc-fallback-ui button:hover,
+#custom-rpc-btn:hover {
+  background: var(--neon-dim);
+  box-shadow: 0 0 14px var(--neon-glow);
+}
+
+/* -------------------------------------------------------------------------
+   15. Footer
+   ------------------------------------------------------------------------- */
+.footer {
+  text-align: center;
+  padding: var(--s-6) var(--s-4);
+  font-size: 0.72em;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------------------
+   16. Responsive
+   ------------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .topbar { flex-wrap: wrap; }
+  .topbar__status { display: none; }
+  .info-grid { grid-template-columns: 1fr 1fr; }
+  .hero img.mascot { width: 130px; height: 130px; }
+  .hero h1 { letter-spacing: 4px; }
+  .sec-body { padding: var(--s-4); }
+}
+@media (max-width: 480px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.8rem; letter-spacing: 3px; }
+  .topbar-btn { padding: 6px 12px; font-size: 0.78em; }
+  .choice-top { flex-direction: column; align-items: flex-start; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* =========================================================================
+   17. MARKET card — real-time price / mcap / volume tracker
+   (populated by js/price-tracker.js)
+   ========================================================================= */
+
+/* Sub-label next to "MARKET" in the card head: shows which DEX pair is shown */
+.market-pair {
+  margin-left: var(--s-2);
+  font-size: 0.75em;
+  color: var(--text-dim);
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+
+/* Hero price row — big USD number + 24h change badge */
+.market-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding: var(--s-3) 0 var(--s-4);
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: var(--s-4);
+}
+.market-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-weight: 900;
+}
+.market-price__symbol {
+  color: var(--green);
+  font-size: 1.4em;
+  text-shadow: 0 0 8px var(--green-glow);
+}
+.market-price__value {
+  color: var(--green);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  letter-spacing: 1px;
+  text-shadow: 0 0 16px var(--green-glow);
+  font-variant-numeric: tabular-nums;
+}
+.market-price__native {
+  color: var(--text-dim);
+  font-size: 0.78em;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-left: var(--s-2);
+}
+
+/* Big 24h change badge */
+.market-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--text-dim);
+  border-radius: var(--r-sm);
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  transition: color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.market-change__arrow { font-size: 0.85em; }
+.market-change__pct    { font-variant-numeric: tabular-nums; }
+.market-change__label  { color: var(--text-dim); font-size: 0.85em; font-weight: 500; }
+.market-change.is-up {
+  color: var(--green);
+  border-color: var(--green);
+  background: rgba(96, 195, 58, 0.08);
+  box-shadow: 0 0 12px var(--green-glow);
+}
+.market-change.is-down {
+  color: var(--red);
+  border-color: var(--red);
+  background: rgba(255, 51, 85, 0.08);
+  box-shadow: 0 0 12px rgba(255, 51, 85, 0.25);
+}
+
+/* Sub-section title inside the card */
+.market-section-title {
+  margin: var(--s-4) 0 var(--s-2);
+  font-size: 0.72em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.market-section-title:first-child { margin-top: 0; }
+
+/* 4-col grid override for the price-change cells */
+.market-grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Per-cell colour states for price changes */
+.market-change-cell .info-value {
+  font-size: 0.95em;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur) var(--ease);
+}
+.market-change-cell.is-up .info-value   { color: var(--green); }
+.market-change-cell.is-down .info-value { color: var(--red); }
+
+/* 24h transactions row */
+.market-txns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--s-2);
+}
+.market-txn {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: var(--s-2) var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+.market-txn__label {
+  font-size: 0.7em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.market-txn__value {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: var(--text-bright);
+  font-variant-numeric: tabular-nums;
+}
+.market-txn--buy { border-color: rgba(96, 195, 58, 0.4); }
+.market-txn--sell { border-color: rgba(255, 51, 85, 0.4); }
+.market-txn--buy  .market-txn__value { color: var(--green); }
+.market-txn--sell .market-txn__value { color: var(--red); }
+.market-txn__value.is-positive { text-shadow: 0 0 8px currentColor; }
+
+/* Footer: "updated Xs ago · view on DexScreener" */
+.market-footer {
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 0.75em;
+  color: var(--text-dim);
+}
+.market-footer__pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: market-pulse 1.6s infinite var(--ease);
+  flex-shrink: 0;
+}
+@keyframes market-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.85); }
+}
+.market-footer__dot { margin: 0 4px; opacity: 0.5; }
+.market-footer a {
+  color: var(--neon);
+  text-decoration: none;
+  transition: text-shadow var(--dur) var(--ease);
+}
+.market-footer a:hover { text-shadow: 0 0 8px var(--neon-glow); }
+
+/* Responsive: collapse the 4-col grid on narrow screens */
+@media (max-width: 540px) {
+  .market-grid--4 { grid-template-columns: 1fr 1fr; }
+  .market-txns { grid-template-columns: 1fr 1fr; }
+  .market-txn--ratio { grid-column: span 2; }
+}
+@media (max-width: 380px) {
+  .market-grid--4 { grid-template-columns: 1fr; }
+  .market-txns { grid-template-columns: 1fr; }
+}
+
