@@ -49,7 +49,16 @@
   };
   const setHref = (id, href) => {
     const el = $(id);
-    if (el) el.href = href;
+    if (!el) return;
+    try {
+      const url = new URL(href);
+      if (url.protocol === 'https:' && url.hostname === 'dexscreener.com' && !url.username && !url.password) {
+        el.href = url.href;
+        el.rel = 'noopener noreferrer';
+        return;
+      }
+    } catch {}
+    el.removeAttribute('href');
   };
   const setClass = (id, cls, on) => {
     const el = $(id);
